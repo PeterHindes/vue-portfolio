@@ -1,31 +1,44 @@
 <template>
   <div id="app">
-    <img loading="lazy" alt="Vue logo" src="./assets/logo.png" />
+    <img alt="Vue logo" src="./assets/logo.png" />
     <!--<div v-for="item in fdata" :key="item">
       <div v-for="itemm in item" :key="itemm">
         <Element :textt="itemm" />
       </div>
     </div>-->
-    <component v-bind:is="comp" msg="Hello"></component>
-    <button v-on:click="comp = 'HelloWorld2'">Hi</button>
-    <button v-on:click="comp = 'HelloWorld'">Bye</button>
+    <div class="o-container">
+      <MarkdownText
+        :md="markdown"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+//let HelloWorld = import('./components/HelloWorld.vue')
+//const HelloWorld2 = () => import('./components/HelloWorld2.vue')
+import lazyLoadComponent from './utils/lazy-load-component';
+// Initially load the BannerImage and IntroText components
+// because they're immediately visible above the fold.
+import SkeletonBox from './components/SkeletonBox.vue';
+const defaultOptions = {
+  loading: SkeletonBox,
+  loadingData: {
+    props: {
+      width: `100%`,
+      height: `20em`,
+    },
+  },
+};
+
 export default {
   name: 'App',
   components: {
-    Element,
-    HelloWorld: () => import( /* webpackPreload: true */ './components/HelloWorld.vue'),
-    HelloWorld2: () => import( /* webpackPreload: true */ './components/HelloWorld2.vue'),
+    MarkdownText: lazyLoadComponent({
+      ...defaultOptions,
+      componentFactory: () => import(`./components/MarkdownText.vue`),
+    }),
   },
-  data: function () {
-    return {
-      //fdata: jd().jsonData.then(function(result) {return}),
-      comp: "HelloWorld"
-    }
-  }
 }
 </script>
 
