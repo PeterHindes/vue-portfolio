@@ -15,7 +15,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: beige;
     margin-top: 60px;
   }
   h3 {
@@ -31,6 +31,10 @@
   }
   a {
     color: #42b983;
+  }
+
+  body {
+    background-color: black;
   }
   </style>
 
@@ -108,29 +112,53 @@
     })
   }
 
+  // Find How Much We Need To Load
+  let countLock = NaN
+  let countResult = NaN
+  function getCount() {
+    console.log("GetCountCalled");
+    if (!(countLock instanceof Promise)){
+      countLock = defer()
+      fetch("/element-count")
+        .then(handleErrors)
+        .then((response) => {
+          return response.text().then((txt) => {
+            return parseInt(txt)
+          })
+        })
+        .then((count) => {
+          countResult = count
+          countLock.resolve()
+        })
+      return countLock
+    } else {
+      console.log("Cached Count Given");
+      countLock = defer()
+      countLock.resolve()
+      return countLock;
+    }
+  }
+
   // Fill cache
   async function prefetch() {
-    fetch("/element-count")
-      .then(handleErrors)
-      .then((response) => {
-        return response.text().then((txt) => {
-          return parseInt(txt)
+    console.log("Prefetching");
+    getCount()
+    .then(() => {
+      console.log("Count Got");
+      for (i=1; i<=countResult; i++) {
+        console.log("Fetching "+i.toString());
+        get("./pages/"+i.toString()+".html").catch(e => {
+          //console.log("Error Caught in general");
+          //console.log(e.message);
+          if ( parseInt(e.message) === 404){
+            console.log("Prefetched Nonexistant File")
+            continuePref = false
+          } else {
+            console.log("Unknown http error: "+e.message+" , Continuing...")
+          }
         })
-      })
-      .then((count) => {
-        for (i=1; i<=count; i++) {
-          get("./pages/"+i.toString()+".html").catch(e => {
-            //console.log("Error Caught in general");
-            //console.log(e.message);
-            if ( parseInt(e.message) === 404){
-              console.log("Prefetched Nonexistant File")
-              continuePref = false
-            } else {
-              console.log("Unknown http error: "+e.message+" , Continuing...")
-            }
-          })
-        }
-      })
+      }
+    })
   }
 
   let f = NaN
@@ -144,8 +172,8 @@
         htmlToReplace.innerHTML = result
       } else {
         console.log("Cancled Stale Request");
-        console.log(currentPageRef.val);
-        console.log(calledPage);
+        //console.log(currentPageRef.val);
+        //console.log(calledPage);
       }
     })
   }
@@ -154,20 +182,23 @@
   function refresh() {
     console.log("MMM Refreshing");
 
-    if (counterContainer.val === 9){
-      counterContainer.val = 1
-    } else {
-      counterContainer.val++
-    }
-    
-    counter.innerText = counterContainer.val.toString()
+    return getCount().then(() => {
+      console.log("Up and Up");
+      if (counterContainer.val === 9){
+        counterContainer.val = 1
+      } else {
+        counterContainer.val++
+      }
 
-    //Loading
-    load(content, "./pages/"+counterContainer.val.toString()+".html", counterContainer, counterContainer.val)
-    
-    
+      counter.innerText = counterContainer.val.toString()
 
-    return f
+      //Loading
+      load(content, "./pages/"+counterContainer.val.toString()+".html", counterContainer, counterContainer.val)
+      
+      
+
+      return f
+    })
   }
   refresh().then(() => {
     prefetch()
