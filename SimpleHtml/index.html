@@ -4,6 +4,7 @@
   <div id="app">
     <img alt="Vue logo" src="./logo.png" loading="lazy" width="200" height="200">
     <button onclick="refresh()">Click me</button>
+    <p id="counter">nan</p>
     <div id="content">Loading...</div>
   </div>
   
@@ -34,7 +35,23 @@
   </style>
 
 <script>
-  let replace = document.getElementById("content")
+  let content = document.getElementById("content")
+  let counter = document.getElementById("counter")
+
+
+  function defer() {
+            var res, rej;
+
+            var promise = new Promise((resolve, reject) => {
+                res = resolve;
+                rej = reject;
+            });
+
+            promise.resolve = res;
+            promise.reject = rej;
+
+            return promise;
+        }
 
   function handleErrors(response) {
     if (!response.ok) {
@@ -51,11 +68,19 @@
     return new Promise((resolve, reject) => {
 
       if( file in getCache ) {
-        console.log(file+" In Cache")
-        resolve(getCache[file])
+        if ( getCache[file] instanceof Promise){ // is deffered
+          console.log("Still Running Old")
+          getCache[file].then(() => {
+            console.log("Finaly got result from cache");
+            resolve(getCache[file])
+          })
+        } else {
+          console.log(file+" In Cache")
+          resolve(getCache[file])
+        }
       } else {
         console.log(file+" Not In Cache")
-        getCache[file] = "Loading Please Wait..." // Prevent Doubble downlaods on super slow connections
+        getCache[file] = defer() // Prevent Doubble downlaods on super slow connections
         fetch(file)
           .then(handleErrors)
           .then((response) => {
@@ -67,6 +92,7 @@
             console.log("Caching And Responding");
             //console.log("String")
             //console.log(stringResp)
+            getCache[file].resolve() // Race condition?
             getCache[file] = stringResp
             //console.log("Cache")
             //console.log(getCache[file])
@@ -107,24 +133,45 @@
       })
   }
 
-  let c = 1
-  function refresh() {
-    console.log("MMM Refreshing");
-    
-    get("./pages/"+c.toString()+".html").then(result => {
+  let f = NaN
+
+  function load(htmlToReplace, urlToUse, currentPageRef, calledPage){
+    htmlToReplace.innerHTML = "<h3>Loading... User Facing</h3>"
+    f = get("./pages/"+calledPage.toString()+".html").then(result => {
       //console.log("Results ")
       //console.log(result)
-      replace.innerHTML = result
+      if (currentPageRef.val === calledPage){
+        htmlToReplace.innerHTML = result
+      } else {
+        console.log("Cancled Stale Request");
+        console.log(currentPageRef.val);
+        console.log(calledPage);
+      }
     })
-
-    if (c === 9){
-      c = 1
-    } else {
-      c++
-    }
   }
-  refresh()
-  prefetch()
+
+  let counterContainer = { val: 0 } // So we can pass by refrence
+  function refresh() {
+    console.log("MMM Refreshing");
+
+    if (counterContainer.val === 9){
+      counterContainer.val = 1
+    } else {
+      counterContainer.val++
+    }
+    
+    counter.innerText = counterContainer.val.toString()
+
+    //Loading
+    load(content, "./pages/"+counterContainer.val.toString()+".html", counterContainer, counterContainer.val)
+    
+    
+
+    return f
+  }
+  refresh().then(() => {
+    prefetch()
+  })
 
 </script>
 

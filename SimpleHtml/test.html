@@ -1,0 +1,58 @@
+<html>
+    <body>
+        
+    </body>
+    <script>
+        function defer() {
+            var res, rej;
+
+            var promise = new Promise((resolve, reject) => {
+                res = resolve;
+                rej = reject;
+            });
+
+            promise.resolve = res;
+            promise.reject = rej;
+
+            return promise;
+        }
+
+        let run = false
+        let stillRunning = false
+        let callbackWait = NaN
+        async function promiseMe() {
+            return new Promise((resolve, reject) => {
+                if (!run){ // Run and then cache
+                    run = true
+                    stillRunning = true
+                    callbackWait = defer()
+                    setTimeout(() => {
+                        stillRunning = false
+                        callbackWait.resolve()
+                        resolve("Fresh")
+                    }, 3000); // sleep
+                } else { // Check if finished with first run
+                    if (stillRunning){
+                        console.log("Still running Old Vers");
+                        callbackWait.then(() => {
+                            resolve("Cached")
+                        })
+                    } else {
+                        resolve("Cached Fast")
+                    }
+                }
+            })
+        }
+
+        let list = {}
+        async function callMeBack() {
+            for (let index = 0; index < 4; index++) {
+                list[index] = promiseMe().then(res => {
+                    console.log(res);
+                })
+            }
+
+        }
+        callMeBack()
+    </script>
+</html>
