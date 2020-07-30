@@ -5,10 +5,9 @@
 <title>CSS Overlaying One DIV over Another DIV</title>
 <style> 
     .container{
-        width: 200px;
-        height: 200px;
+        width: 100%;
+        height: 800px;
         position: relative;
-        margin: 20px;
     }
     .box{
         width: 100%;
@@ -21,19 +20,135 @@
 </head>
 <body>
     <div class="container">
-      <div class="box" id="other-stack" style="background: red; z-index: 0;"></div>
-      <div class="box" style="background: blue; z-index: 1;"></div>
+      <h1>Top Ham</h1>
+      <p>
+        For a guide and recipes on how to configure / customize this project,<br>
+        check out the
+        <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+      </p>
+      <h3>Installed CLI Plugins</h3>
+      <ul>
+        <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
+        <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
+      </ul>
+      <h3>Essential Links</h3>
+      <ul>
+        <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
+        <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
+        <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
+        <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
+        <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
+      </ul>
+      <h3>Ecosystem</h3>
+      <ul>
+        <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
+        <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
+        <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
+        <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
+        <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+      </ul>
     </div>
-    <button onclick="myFunction('0')">Click me</button>
-    <button onclick="myFunction('2')">Click me</button>
+    
+    <button onclick="myFunction()">Click me</button>
+
+
+    <script>
+      let countt = 500
+
+      counter = 1
+      function myFunction() {
+        console.log(counter);
+        f = document.getElementsByClassName("box")
+        for (let inx = 0; inx < f.length; inx++) {
+          if (inx == counter){
+            f[inx].style.zIndex = 1
+          } else {
+            f[inx].style.zIndex = 0
+          }
+        }
+        if (counter < countt-1){
+          counter++
+        }else{
+          counter = 0
+        }
+      }
+    
+      let dataaaaaaa = 
+`<h1>{{{{{Insert Here}}}}}</h1>
+<p>
+  For a guide and recipes on how to configure / customize this project,<br>
+  check out the
+  <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+</p>
+<h3>Installed CLI Plugins</h3>
+<ul>
+  <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
+  <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
+</ul>
+<h3>Essential Links</h3>
+<ul>
+  <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
+  <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
+  <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
+  <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
+  <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
+</ul>
+<h3>Ecosystem</h3>
+<ul>
+  <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
+  <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
+  <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
+  <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
+  <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+</ul>`
+
+
+
+
+
+// Load First Element on page for good first paint
+
+// Load hidden elements
+
+// Bring to front 
+
+// See if there is freezing from loading in the hidden elements
+
+// See what the delay for bring to front is
+
+
+
+
+
+
+      async function lad(box,indx){
+        return new Promise((resolve, reject) => {
+          resolve(dataaaaaaa)
+        }).then(()=>{
+          cataaaaaaaaa = dataaaaaaa.replace(/{{{{{Insert Here}}}}}/g,'Hello From '+indx.toString())
+          box.innerHTML = cataaaaaaaaa
+        })
+      }
+      async function loadd(){
+        let boxes = []
+        for (let i = 0; i < countt; i++) {
+          //<div class="box" style="background: blue; z-index: 1;">
+          let newEl = document.createElement("div")
+          newEl.className = "box"
+          newEl.style.background = "violet"
+          newEl.style.zIndex = i==0?"1": "0" // Default Layer
+          boxes[i] = document.getElementsByClassName("container")[0].appendChild(newEl)
+        }
+
+        boxes.forEach((box,indx)=>{
+          lad(box,indx)
+        })
+        
+      }
+    
+      loadd()
+    </script>
 </body>
 
-<script>
-  function myFunction(g) {
-    f = document.getElementById("other-stack");
-    console.log(f);
-    f.style.zIndex = g;
-  }
-</script>
 
 </html>
