@@ -57,7 +57,7 @@
 
       counter = 1
       function myFunction() {
-        console.log(counter);
+        //console.log(counter);
         f = document.getElementsByClassName("box")
         for (let inx = 0; inx < f.length; inx++) {
           if (inx == counter){
@@ -117,36 +117,29 @@
 // See what the delay for bring to front is
 
 
-
-
-
-
-      async function lad(box,indx){
-        return new Promise((resolve, reject) => {
-          resolve(dataaaaaaa)
-        }).then(()=>{
-          cataaaaaaaaa = dataaaaaaa.replace(/{{{{{Insert Here}}}}}/g,'Hello From '+indx.toString())
-          box.innerHTML = cataaaaaaaaa
-        })
-      }
-      async function loadd(){
-        let boxes = []
-        for (let i = 0; i < countt; i++) {
+      async function loadd(counttt){
+        //let boxes = []
+        for (let i = 0; i < counttt; i++) {
           //<div class="box" style="background: blue; z-index: 1;">
-          let newEl = document.createElement("div")
-          newEl.className = "box"
-          newEl.style.background = "violet"
-          newEl.style.zIndex = i==0?"1": "0" // Default Layer
-          boxes[i] = document.getElementsByClassName("container")[0].appendChild(newEl)
-        }
-
-        boxes.forEach((box,indx)=>{
-          lad(box,indx)
-        })
-        
+          new Promise((resolve, reject) => {
+            let newEl = document.createElement("div")
+            let o = i
+            newEl.className = "box"
+            newEl.id = "box"+o.toString()
+            newEl.style.background = "violet"
+            newEl.style.zIndex = o==0?"1": "0" // Default Layer
+            resolve(newEl)
+          })
+          .then((newEl) => {
+            let box = document.getElementsByClassName("container")[0].appendChild(newEl)
+            let cataaaaaaaaa = dataaaaaaa.replace(/{{{{{Insert Here}}}}}/g,'Hello From '+newEl.id)
+            //console.log(cataa);
+            box.innerHTML = cataaaaaaaaa
+          })
+        } 
       }
     
-      loadd()
+      loadd(45)
     </script>
 </body>
 

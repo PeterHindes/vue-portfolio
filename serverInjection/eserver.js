@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
             // Preload The Cache
             let pcvar = ""
             let fetchers = new Array
-            for (i = 1; i<=preloadCount; i++) {
+            for (let i = 1; i<=preloadCount; i++) {
                 let fname = i.toString()+'.html';
                 console.log(fname);
                 fetchers[i-1] = util.promisify(fs.readFile) ('data/pages/'+fname, 'utf8')
@@ -27,7 +27,7 @@ app.get('/', function (req, res) {
                 })
             }
             
-            Promise.all(fetchers).then((dating) => {
+            Promise.all(fetchers).then(() => {
                 console.log("All Fetched");
                 data=data.replace(/{{Preload Here}}/g,pcvar)
                 //console.log("Data replaced:\n"+data);
@@ -42,4 +42,5 @@ app.get('/', function (req, res) {
 app.use(express.static('data')); //Serves resources from public folder
 
 
-var server = app.listen(5000);
+//var server = 
+app.listen(5000);
