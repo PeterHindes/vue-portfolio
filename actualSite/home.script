@@ -48,7 +48,11 @@
         getCache[file] = defer() // Prevent Doubble downlaods on super slow connections
         fetch(file)
           .then(handleErrors)
-          .then(res=>{return res.blob()})
+          .then((response) => {
+            //console.log(response.status)
+            //console.log("Unpacking");
+            return response.text()
+          })
           .then((stringResp) => {
             console.log("Caching And Responding");
             //console.log("String")
