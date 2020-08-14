@@ -9,7 +9,7 @@
 
     <div>
         <div id="d1">
-            <img src="logo.png" />
+            <img src="logo.png" height="700px" width="auto"/>
         </div>
         <div id="container">
             <div class="slide-out" id="s1">
@@ -21,38 +21,51 @@
 
         button {
             float:right;
+            position: absolute;
             z-index: 99;
         }
 
         #container {
             overflow: hidden;
             height: 80vh;
-            z-index: 0 ;
+            display: none;
+            
+        }
+        #container.godown {
+            display: inline-block;
         }
         #s1 {
-            visibility: hidden;
-            position: relative;
             transition-property: all;
             transition-duration: 1s;
             transition-timing-function: cubic-bezier(0.275, -0.265, 0.485, 1.475);
+
+            background-color: wheat;
+            border-radius: 15px;
+            position: relative;
             top:-1000px;
+
+            padding-top: 9vh;
+            padding-left: 2em;
+            margin-top: -6vh;
         }
         #s1.godown {
             top:0px;
-            visibility: visible;
         }
 
         #d1 {
-            border: 1px solid black;
-            overflow: hidden;
-            max-height: 15vh;
             transition-property: all;
             transition-duration: .5s;
             transition-timing-function: cubic-bezier(0.275, -0.265, 0.485, 1.475);
+
+            overflow: hidden;
+            max-height: 15vh;
             width: 47%;
             margin: 3%;
             padding: 0px;
             z-index: 5;
+
+            border-radius: 15px;
+            background-color: white;
         }
         
         body {
@@ -61,8 +74,9 @@
     </style>
 
     <script>
-        d1 = document.getElementById("d1")
-        s1 = document.getElementById("s1")
+        function eid(id) {
+            return document.getElementById(id)
+        }
         
         let big = false
         let s1baseclass = "slideout"
@@ -72,21 +86,22 @@
             let dela = 500
 
             setTimeout(function() { 
-                d1.style.width = big ? "90%" : "";
+                eid("d1").style.width = big ? "90%" : "";
                 console.log("V");
             }, big ? 0 : dela);
 
             setTimeout(function() { 
-                d1.style.maxHeight = big ? "35vh" : "";
+                eid("d1").style.maxHeight = big ? "35vh" : "";
                 console.log("H");
             }, big ? dela : 0);
 
+            eid("container").className = big? "godown" : ""
             setTimeout(function() { 
-                s1.className = big? s1baseclass+" godown" : s1baseclass
+                eid("s1").className = big? s1baseclass+" godown" : s1baseclass
                 console.log("C");
             }, big ? dela*2 : 0);
             
-            //s1.style.visibility = big?"visible":""
+            //eid("s1").style.visibility = big?"visible":""
         }
 
         let toload = `<h1>Hi One</h1>
@@ -129,7 +144,7 @@ Sed a est elit. Morbi cursus varius feugiat. Quisque tincidunt luctus mollis. Fu
 `;
 
         function load() {
-            s1.innerHTML = toload;
+            eid("s1").innerHTML = toload;
         }
         load()
       </script>

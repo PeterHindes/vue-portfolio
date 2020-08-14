@@ -1,0 +1,19 @@
+- tileCount = 13
+- i = 0
+head
+   title= title
+   style!= css
+
+body
+   script!= scipp
+   cs-app
+      cs-title CONNECTED ANIMATION
+      cs-tiles
+         - while(i++ < tileCount)
+            input(type='checkbox' id='demo-'+i)
+            cs-tile-container
+               cs-tile
+                  label.cs-open(for='demo-'+i)
+                  label.cs-close(for='demo-'+i) +
+                  cs-text demo #{i}
+                  cs-content #{i}replacethiscontent
