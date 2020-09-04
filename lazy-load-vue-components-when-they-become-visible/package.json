@@ -20,7 +20,7 @@
     "@vue/cli-plugin-babel": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
     "http-server": "^0.12.3",
-    "marked": "^0.5.2",
+    "marked": "^0.7.0",
     "node-sass": "^4.11.0",
     "node-sass-magic-importer": "^5.2.0",
     "reset-css": "^4.0.1",
